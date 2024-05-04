@@ -32,6 +32,17 @@ model Applicant {
   id            String      @id @default(cuid())
   applicationNo String      @unique
   name          String
+  email         String      @unique
+  dateOfBirth   DateTime
+  district      String
+  state         String
+  street        String
+  school        String
+  graduationYear Int
+  percentage    Float
+  major         String
+  phone         String
+  address       String
   isNRI         Boolean
   allotments    Allotment[]
 }
@@ -42,4 +53,5 @@ model Allotment {
   quota       Quota     @relation(fields: [quotaId], references: [id])
   applicantId String
   applicant   Applicant @relation(fields: [applicantId], references: [id])
+  course_id   String
 }
