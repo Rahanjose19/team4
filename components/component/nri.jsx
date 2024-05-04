@@ -27,10 +27,22 @@ To read more about using these font, please visit the Next.js documentation:
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { SelectValue, SelectTrigger, SelectItem, SelectGroup, SelectContent, Select } from "@/components/ui/select"
+
 
 
 export function NRI() {
+
+  const [courses, setCourses] = useState([]);
+  const [priorityList, setPriorityList] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('');
+
+  const handleAdd = () => {
+    setPriorityList([...priorityList, { course: selectedCourse, priority: priorityList.length + 1 }]);
+    setSelectedCourse('');
+  };
+
   const [form, setFormState] = useState({
     applicationNo: '',
     name: '',
@@ -62,7 +74,7 @@ export function NRI() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({form , priorityList}),
       });
   
       if (!response.ok) {
@@ -87,10 +99,21 @@ export function NRI() {
   };  
 
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/courses");
+      const data = await response.json();
+      console.log(data);
+      setCourses(data);
+    };
+    fetchData();
+  }, []);
+
 
   return (
-    (
-    <form onSubmit={handleSubmit} className="px-4 md:px-6 lg:px-8 py-6 space-y-6">
+    
+      <div className="px-4 md:px-6">
+    <form onSubmit={handleSubmit} className="lg:px-8 py-6 space-y-6">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">NRI Applicants</h1>
         <p className="text-gray-500 dark:text-gray-400">
@@ -162,7 +185,56 @@ export function NRI() {
         </div>
         <Button>Submit</Button>
       </div>
-      <div className="border-t border-gray-200 dark:border-gray-800" />
+      
+
+    </form>
+      <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="course">Course</Label>
+          <Select id="course" value={selectedCourse}
+            onValueChange={(value) => setSelectedCourse(value)}
+>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select course" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {courses.map((course) => (
+                  <SelectItem key={course.id} value={course.id}>{course.name}</SelectItem>
+                ))}
+
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="priority">Priority</Label>
+          <Input
+            id="priority"
+            max="10"
+            min="1"
+            placeholder="Enter priority (1-10)"
+            type="number"
+            value={priorityList.length + 1}
+            disabled
+          />
+        </div>
+      </div>
+      <Button onClick={handleAdd}>Add</Button>
+      <div className="border rounded-lg p-4 space-y-2">
+        <h3 className="text-lg font-medium">Priority List</h3>
+        <div className="space-y-2">
+          {priorityList.map((item, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <div>{item.course}</div>
+              <div className="font-medium">{item.priority}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div className="border-t border-gray-200 dark:border-gray-800" />
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Applicants</h2>
         <div className="w-full overflow-auto">
@@ -196,6 +268,6 @@ export function NRI() {
           </table>
         </div>
       </div>
-    </form>)
-  );
+    </div>
+)
 }

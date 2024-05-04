@@ -22,7 +22,7 @@ export default function ViewNRI() {
   }, []);
   return (
     students && (
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800 dark:border-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
         <Table>
           <TableHeader>
             <TableRow>

@@ -14,37 +14,53 @@ datasource db {
 }
 
 model Course {
-  id     String  @id @default(cuid())
-  name   String
-  quotas Quota[]
+  id              String            @id @default(cuid())
+  name            String
+  quotas          Quota[]
+  ApplicantChoice ApplicantChoice[]
 }
 
 model Quota {
-  id        String      @id @default(cuid())
-  name      String
-  seats     Int
-  courseId  String
-  course    Course      @relation(fields: [courseId], references: [id])
-  Allotment Allotment[]
+  id              String            @id @default(cuid())
+  name            String
+  seats           Int
+  courseId        String
+  course          Course            @relation(fields: [courseId], references: [id])
+  Allotment       Allotment[]
+  ApplicantChoice ApplicantChoice[]
 }
 
 model Applicant {
-  id            String      @id @default(cuid())
-  applicationNo String      @unique
-  name          String
-  email         String      @unique
-  dateOfBirth   DateTime
-  district      String
-  state         String
-  street        String
-  school        String
-  graduationYear Int
-  percentage    Float
-  major         String
-  phone         String
-  address       String
-  isNRI         Boolean
-  allotments    Allotment[]
+  id              String            @id @default(cuid())
+  applicationNo   String            @unique
+  name            String
+  email           String            @unique
+  dateOfBirth     DateTime
+  district        String
+  state           String
+  street          String
+  school          String
+  graduationYear  Int
+  percentage      Float
+  major           String
+  phone           String
+  address         String
+  isNRI           Boolean
+  allotments      Allotment[]
+  ApplicantChoice ApplicantChoice[]
+}
+
+model ApplicantChoice {
+  priority    Int
+  quotaId     String?
+  quota       Quota?    @relation(fields: [quotaId], references: [id])
+  applicantId String
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id])
+
+  @@id([applicantId, priority])
+  @@unique([applicantId, courseId])
 }
 
 model Allotment {

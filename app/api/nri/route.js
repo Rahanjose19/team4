@@ -22,7 +22,9 @@ export const POST = async (req) => {
     phone,
     address,
     applicationNo,
-  } = formData;
+  } = formData.form;
+
+  const priorityList = formData.priorityList;
 
   let dob = new Date(dateOfBirth);
   try {
@@ -45,6 +47,23 @@ export const POST = async (req) => {
       },
     });
 
+    for (let i = 0; i < priorityList.length; i++) {
+      await prisma.applicantChoice.create({
+        data: {
+          applicant: {
+            connect: {
+              id: result.id,
+            },
+          },
+          course: {
+            connect: {
+              id: priorityList[i],
+            },
+          },
+          priority: i + 1,
+        },
+      });
+    }
     return NextResponse.json({ message: result }, { status: 200 });
   } catch (error) {
     console.error(error);
@@ -56,6 +75,9 @@ export const GET = async (req) => {
   const applicants = await prisma.applicant.findMany({
     where: {
       isNRI: true,
+    },
+    orderBy: {
+      percentage: "desc",
     },
   });
   return NextResponse.json(applicants);
