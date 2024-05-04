@@ -29,7 +29,8 @@ import { Button } from "@/components/ui/button"
 
 export function NRI() {
   return (
-    (<div className="px-4 md:px-6 lg:px-8 py-6 space-y-6">
+    (
+    <div className="px-4 md:px-6 lg:px-8 py-6 space-y-6">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">NRI Applicants</h1>
         <p className="text-gray-500 dark:text-gray-400">
@@ -37,16 +38,54 @@ export function NRI() {
         </p>
       </div>
       <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" placeholder="Enter your name" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" placeholder="Enter your email" required type="email" />
-          </div>
-        </div>
+  <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-2">
+      <Label htmlFor="name">Name</Label>
+      <Input id="name" placeholder="Enter name" required />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="email">Email</Label>
+      <Input id="email" placeholder="Enter email" required type="email" />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="dateofbirth">Date of Birth</Label>
+      <Input id="dateofbirth" placeholder="Enter date of birth" required type="date" />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="district">District</Label>
+      <Input id="district" placeholder="Enter district" required />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="state">State</Label>
+      <Input id="state" placeholder="Enter state" required />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="street">Street</Label>
+      <Input id="street" placeholder="Enter street" required />
+    </div>
+  </div>
+  <div className="space-y-4">
+  <h2 className="text-2xl font-bold">Academic Details</h2>
+  <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-2">
+      <Label htmlFor="school">School</Label>
+      <Input id="school" placeholder="Enter school name" required />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="graduationYear">Graduation Year</Label>
+      <Input id="graduationYear" placeholder="Enter graduation year" required type="number" />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="percentage">Percentage</Label>
+      <Input id="percentage" placeholder="Enter percentage" required type="number" />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="major">Major</Label>
+      <Input id="major" placeholder="Enter major" required />
+    </div>
+  </div>
+</div>
+      
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="phone">Phone</Label>
@@ -70,6 +109,8 @@ export function NRI() {
                 <th className="p-3 font-semibold">Name</th>
                 <th className="p-3 font-semibold">Email</th>
                 <th className="p-3 font-semibold">Phone</th>
+                <th className="p-3 font-semibold">Rank</th>
+                <th className="p-3 font-semibold">Branch</th>
               </tr>
             </thead>
             <tbody>
