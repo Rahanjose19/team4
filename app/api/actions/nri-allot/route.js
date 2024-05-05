@@ -24,7 +24,7 @@ async function allotApplicants() {
       ApplicantChoice: {
         orderBy: {
           priority: "asc",
-        },
+          },
         include: {
           quota: true,
         },

@@ -81,12 +81,16 @@ export function Hero() {
             <Card>
               <CardContent className="flex flex-col gap-4">
                 <div>
-                  <h3 className="text-lg font-medium">Offer Internships</h3>
+                  <h3 className="text-lg font-medium">Edit Course Quotas</h3>
                   <p className="text-gray-500 dark:text-gray-400">
-                    Offer internships to NRI students to provide them with real-world experience.
+                    Edit the number of seats offered in each course and respective quotas.
                   </p>
                 </div>
-                <Button variant="outline">View Details</Button>
+                <Button onClick={(e)=>{
+                  e.preventDefault();
+                  router.push('/edit')
+                }}
+                variant="outline">Edit Seats</Button>
               </CardContent>
             </Card>
             <Card>

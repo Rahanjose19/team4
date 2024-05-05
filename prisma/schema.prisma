@@ -50,7 +50,7 @@ model Applicant {
   allotments      Allotment[]
   ApplicantChoice ApplicantChoice[]
   currentPriority Int?
-  alloted        Boolean?
+  alloted        Boolean @default(false)
 }
 
 model ApplicantChoice {
