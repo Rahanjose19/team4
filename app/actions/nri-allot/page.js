@@ -172,10 +172,8 @@ const removeNRIallotment = async (id) => {
   await replaceNRIAllotment(allotment.course_id, true);
   return allotment;
 };
-replaceNRIAllotment("cs", true).then((allotment) => {
-  console.log(allotment);
-});
 
-// export const GET = async (req) => {
-//   return NextResponse.json({ message: "Hello" });
-// };
+export const GET = async (req) => {
+  const allotments = await allotApplicants();
+  return NextResponse.json({ allotments });
+};
