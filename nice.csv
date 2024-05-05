@@ -1,0 +1,3 @@
+applicantId,applicationNo,name,email,dateOfBirth,district,state,street,school,graduationYear,percentage,major,phone,address,isNRI,currentPriority,alloted,courseId,quotaId
+cuid1,app1,John Doe,johndoe@example.com,1990-01-01,District1,State1,Street1,School1,2008,85.5,Computer Science,1234567890,Address1,false,1,false,cs,clvt75s3f0006iai8t69um66y
+cuid2,app2,Jane Doe,janedoe@example.com,1992-02-02,District2,State2,Street2,School2,2010,90.0,Information Technology,0987654321,Address2,true,2,true,cs,gen
