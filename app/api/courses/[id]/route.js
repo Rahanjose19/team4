@@ -29,6 +29,7 @@ export async function PUT(req, context) {
           id: quotas[i].id,
         },
         data: {
+          name: quotas[i].name,
           seats: parseInt(quotas[i].seats),
         },
       });
