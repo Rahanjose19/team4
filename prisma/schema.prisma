@@ -77,7 +77,7 @@ model Allotment {
 
 model Log {
   id        String   @id @default(cuid())
-  action   String
+  action   String?
   message   String
   createdAt DateTime @default(now())
 }

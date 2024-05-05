@@ -31,13 +31,25 @@ import { Select } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import { AllotmentAddModal } from "./allotment-add-modal"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 export function Hero() {
   
   const [isOpen , setIsOpen] = useState(false);
   const [reducedData, setReducedData] = useState([]);
+  const [logs , setLogs] = useState([]);
+  const router = useRouter();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/logs");
+      const data = await response.json();
+      console.log(data);
+      setLogs(data);
+    };
+    fetchData();
+  }, []);
   return (
 
     (<main className="flex flex-col gap-8 p-6 md:p-8 lg:p-10">
@@ -50,6 +62,33 @@ export function Hero() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="col-span-2 md:col-span-1 lg:col-span-2">
           <div className="grid grid-cols-1 gap-4">
+            
+            <Card>
+              <CardContent className="flex flex-col gap-4">
+                <div>
+                  <h3 className="text-lg font-medium">Add NRI application</h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Provide Details and submit the application for NRI students.
+                  </p>
+                </div>
+                <Button variant="outline" onClick={(e)=>{
+                  e.preventDefault();
+                  router.push('/nri/add')
+                
+                }} >New Application</Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="flex flex-col gap-4">
+                <div>
+                  <h3 className="text-lg font-medium">Offer Internships</h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Offer internships to NRI students to provide them with real-world experience.
+                  </p>
+                </div>
+                <Button variant="outline">View Details</Button>
+              </CardContent>
+            </Card>
             <Card>
               <CardContent className="flex flex-col gap-4">
                 <div>
@@ -79,28 +118,6 @@ export function Hero() {
                   }
                 }
                 >Allot NRI</Button>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="flex flex-col gap-4">
-                <div>
-                  <h3 className="text-lg font-medium">Conduct Webinar</h3>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    Conduct a webinar on the latest trends in technology for NRI students.
-                  </p>
-                </div>
-                <Button variant="outline">View Details</Button>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="flex flex-col gap-4">
-                <div>
-                  <h3 className="text-lg font-medium">Offer Internships</h3>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    Offer internships to NRI students to provide them with real-world experience.
-                  </p>
-                </div>
-                <Button variant="outline">View Details</Button>
               </CardContent>
             </Card>
           </div>
@@ -144,21 +161,15 @@ export function Hero() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                { logs.map((log, index) => (
                 <TableRow>
-                  <TableCell>Organize Hackathon</TableCell>
-                  <TableCell>2023-04-15</TableCell>
-                  <TableCell>50</TableCell>
+                  <TableCell>Allotment</TableCell>
+                  <TableCell>{log.createdAt}</TableCell>
+                  <TableCell>{log.message}</TableCell>
+
                 </TableRow>
-                <TableRow>
-                  <TableCell>Conduct Webinar</TableCell>
-                  <TableCell>2023-05-01</TableCell>
-                  <TableCell>30</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Offer Internships</TableCell>
-                  <TableCell>2023-06-01</TableCell>
-                  <TableCell>20</TableCell>
-                </TableRow>
+                ))  
+              }
               </TableBody>
             </Table>
           </CardContent>

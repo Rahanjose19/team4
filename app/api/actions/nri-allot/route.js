@@ -74,9 +74,15 @@ async function allotApplicants() {
       }
     }
   }
+  if (res.length) {
+    await prisma.log.create({
+      data: {
+        message: "Alloted " + res.length + " NRI applicants",
+      },
+    });
+  }
   return res;
 }
-
 
 export const GET = async (req) => {
   try {

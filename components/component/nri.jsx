@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from 'react';
 import { SelectValue, SelectTrigger, SelectItem, SelectGroup, SelectContent, Select } from "@/components/ui/select"
-
+import { useRouter } from "next/navigation";
 
 
 export function NRI() {
@@ -37,6 +37,7 @@ export function NRI() {
   const [courses, setCourses] = useState([]);
   const [priorityList, setPriorityList] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
+  const router = useRouter();
 
   const handleAdd = () => {
     setPriorityList([...priorityList, { course: selectedCourse, priority: priorityList.length + 1 }]);
@@ -80,7 +81,11 @@ export function NRI() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+      else {
+        alert("Data submitted successfully");
+        router.push('/nri');
+      }
+
       const data = await response.json();
       console.log(data);
   
@@ -183,12 +188,11 @@ export function NRI() {
             <Input value={form.address} onChange={handleInputChange} id="address" placeholder="Enter your address" required />
           </div>
         </div>
-        <Button>Submit</Button>
       </div>
       
 
     </form>
-      <div className="space-y-4">
+      <div className="space-y-4 pl-8">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="course">Course</Label>
@@ -208,7 +212,7 @@ export function NRI() {
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 ">
           <Label htmlFor="priority">Priority</Label>
           <Input
             id="priority"
@@ -218,7 +222,7 @@ export function NRI() {
             type="number"
             value={priorityList.length + 1}
             disabled
-          />
+            />
         </div>
       </div>
       <Button onClick={handleAdd}>Add</Button>
@@ -226,48 +230,15 @@ export function NRI() {
         <h3 className="text-lg font-medium">Priority List</h3>
         <div className="space-y-2">
           {priorityList.map((item, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <div>{item.course}</div>
+            <div key={index} className="flex pt-3items-center gap-x-20 justify-start">
               <div className="font-medium">{item.priority}</div>
+              <div>{item.course}</div>
             </div>
           ))}
         </div>
       </div>
+    <Button onClick={handleSubmit}>Submit</Button>
     </div>
-    <div className="border-t border-gray-200 dark:border-gray-800" />
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Applicants</h2>
-        <div className="w-full overflow-auto">
-          <table
-            className="w-full text-left bg-white border border-gray-200 dark:border-gray-800 dark:border-gray-800">
-      <thead>
-        <tr>
-          <th className="p-3 font-bold">Name</th>
-          <th className="p-3 font-bold">Email</th>
-          <th className="p-3 font-bold">Phone</th>
-          
-        </tr>
-      </thead>
-            <tbody>
-              <tr className="hover:bg-gray-100 dark:hover:bg-gray-900">
-                <td className="p-3">Rahul Sharma</td>
-                <td className="p-3">rahul@example.com</td>
-                <td className="p-3">+91 99999 88888</td>
-              </tr>
-              <tr className="hover:bg-gray-100 dark:hover:bg-gray-900">
-                <td className="p-3">Asha Patel</td>
-                <td className="p-3">asha@example.com</td>
-                <td className="p-3">+91 77777 66666</td>
-              </tr>
-              <tr className="hover:bg-gray-100 dark:hover:bg-gray-900">
-                <td className="p-3">Sandeep Kumar</td>
-                <td className="p-3">sandeep@example.com</td>
-                <td className="p-3">+91 55555 44444</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
 )
 }
