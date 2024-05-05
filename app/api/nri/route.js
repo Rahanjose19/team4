@@ -1,9 +1,7 @@
 // pages/api/submitForm.js
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/utils.js";
 import { parse } from "next/dist/build/swc";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
 
 export const POST = async (req) => {
   const formData = await req.json();
@@ -83,7 +81,6 @@ export const GET = async (req) => {
   return NextResponse.json(applicants);
 };
 
-
 export const EDIT = async (req) => {
   const formData = await req.json();
   console.log(formData);
@@ -158,7 +155,6 @@ export const EDIT = async (req) => {
     return NextResponse.json({ message: "wrongggg" }, { status: 400 });
   }
 };
-
 
 export const DELETE = async (req) => {
   const formData = await req.json();

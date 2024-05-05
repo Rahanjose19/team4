@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/utils.js";
 import { NextResponse } from "next/server";
-const prisma = new PrismaClient();
 
 async function getNriQuotas() {
   const nriQuotas = await prisma.quota.findMany({

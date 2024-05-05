@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/utils.js";
 import { NextResponse } from "next/server";
-const prisma = new PrismaClient();
 
 const replaceNRIAllotment = async (courseId, repeat = false, memo = []) => {
   const quota = await prisma.quota.findFirst({
@@ -235,7 +234,7 @@ export const POST = async (req) => {
       message: `New Applicants: ${newApplicants}`,
     },
   });
-  
+
   console.log("step 2", result);
   return NextResponse.json(result);
 };
