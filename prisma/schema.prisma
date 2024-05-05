@@ -28,6 +28,7 @@ model Quota {
   course          Course            @relation(fields: [courseId], references: [id])
   Allotment       Allotment[]
   ApplicantChoice ApplicantChoice[]
+  code           String
 }
 
 model Applicant {

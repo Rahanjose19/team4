@@ -75,7 +75,7 @@ export function NRI() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({form , priorityList}),
-      });
+      }); 
   
       if (!response.ok) {
         throw new Error('Network response was not ok');

@@ -57,7 +57,7 @@ export const POST = async (req) => {
           },
           course: {
             connect: {
-              id: priorityList[i],
+              id: priorityList[i].course,
             },
           },
           priority: i + 1,
