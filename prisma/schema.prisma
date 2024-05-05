@@ -28,7 +28,7 @@ model Quota {
   course          Course            @relation(fields: [courseId], references: [id])
   Allotment       Allotment[]
   ApplicantChoice ApplicantChoice[]
-  code           String
+  code            String?
 }
 
 model Applicant {
@@ -49,6 +49,7 @@ model Applicant {
   isNRI           Boolean
   allotments      Allotment[]
   ApplicantChoice ApplicantChoice[]
+  currentPriority Int?
 }
 
 model ApplicantChoice {
