@@ -188,10 +188,54 @@ export const POST = async (req) => {
         applicant: true,
       },
     });
-    return { nriReplaced: "null", newAllotment };
+    return { nriReplaced: null, newAllotment };
   });
 
   const result = await Promise.all(res);
+  let nriReplaced = 0;
+  let nriDisplaced = 0;
+  let quotaChanged = 0;
+  let newApplicants = 0;
+
+  for (const allotment of result) {
+    if (allotment.nriReplaced === "true") {
+      nriReplaced++;
+      nriDisplaced += allotment.replaced.length || 0;
+    } else if (allotment.nriReplaced === "false") {
+      quotaChanged++;
+    } else {
+      newApplicants++;
+    }
+  }
+
+  await prisma.log.create({
+    data: {
+      message: `Allotments updated: ${
+        nriReplaced + nriDisplaced + quotaChanged + newApplicants
+      }`,
+    },
+  });
+  await prisma.log.create({
+    data: {
+      message: `NRI Replaced: ${nriReplaced}`,
+    },
+  });
+  await prisma.log.create({
+    data: {
+      message: `NRI Displaced: ${nriDisplaced}`,
+    },
+  });
+  await prisma.log.create({
+    data: {
+      message: `Quota Changed: ${quotaChanged}`,
+    },
+  });
+  await prisma.log.create({
+    data: {
+      message: `New Applicants: ${newApplicants}`,
+    },
+  });
+  
   console.log("step 2", result);
   return NextResponse.json(result);
 };
