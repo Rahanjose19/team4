@@ -9,3 +9,15 @@ export const GET = async (req) => {
   });
   return NextResponse.json(logs);
 };
+
+export const POST = async (req) => {
+  const formData = await req.json();
+  const { message,action } = formData;
+  const log = await prisma.log.create({
+    data: {
+      message,
+      action
+    },
+  });
+  return NextResponse.json(log);
+};

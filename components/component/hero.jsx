@@ -129,23 +129,40 @@ export function Hero() {
         <div className="col-span-1 md:col-span-1 lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Allot to NRI Students</CardTitle>
+              <CardTitle>Manage</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <div className="space-y-2 flex flex-col">
                 <Label htmlFor="action">Action</Label>
-                <Select id="action">
-                  <option>Select an action</option>
-                  <option>Organize Hackathon</option>
-                  <option>Conduct Webinar</option>
-                  <option>Offer Internships</option>
-                </Select>
+                  <Button className="size-30 bg-slate-500 " onClick={(e)=>{
+                    e.preventDefault();
+                    router.push('/courseinfo')
+                  }}>Courses</Button>
+                  <Button className="size-30 bg-slate-500">Applicants</Button>
+                  <Button className="size-30 bg-slate-500">Allotments</Button>
+                  <Button className="size-30 bg-slate-500">Previous Years</Button>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="students">Number of NRI Students</Label>
-                <Input id="students" type="number" />
+                <Input id="log" placeholder="log item" type="text" />
               </div>
-              <Button className="w-full">Allot</Button>
+              <Button className="w-full"
+                onClick={async () => {
+                  const log = document.getElementById("log").value;
+                  const res = await fetch(`/api/logs`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action:"display", message: log }),
+                  });
+
+                  if (res.ok) {
+                    const data = await res.json();
+                    console.log("Log success" , data);
+                    setLogs([...logs, data]);
+                  }
+                }}
+              >Add to Log</Button>
             </CardContent>
           </Card>
         </div>
@@ -167,8 +184,8 @@ export function Hero() {
               <TableBody>
                 { logs.map((log, index) => (
                 <TableRow>
-                  <TableCell>Allotment</TableCell>
-                  <TableCell>{log.createdAt}</TableCell>
+                  <TableCell>{log.action ? log.action : "Allotment"}</TableCell>
+                  <TableCell>{(new Date(log.createdAt)).toLocaleString()}</TableCell>
                   <TableCell>{log.message}</TableCell>
 
                 </TableRow>
