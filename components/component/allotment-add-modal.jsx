@@ -27,23 +27,26 @@ export function AllotmentAddModal({enrollments  , setIsOpen}) {
   return (
     (<Dialog defaultOpen>
       <DialogTrigger asChild>
-        <Button variant="outline">Open Modal</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>NRI Enrollments Success</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">{
-          enrollments.map(enrollment => (
-            <div className="grid grid-cols-[1fr,auto] items-center gap-4">
+        <div className="grid gap-4 py-4">            <div className="grid grid-cols-[1fr,auto] items-center gap-4">
               <div>
-                <h4 className="font-medium">{enrollment.course}</h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{enrollment.seats} allotted</p>
+                <h4 className="font-medium">cs</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">5 allotted</p>
               </div>
               <CheckIcon className="h-5 w-5 text-green-500" />
             </div>
-          ))
-        }
+            <div className="grid grid-cols-[1fr,auto] items-center gap-4">
+              <div>
+                <h4 className="font-medium">ece</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">5 allotted</p>
+              </div>
+              <CheckIcon className="h-5 w-5 text-green-500" />
+            </div>
+
         </div>
         <DialogFooter>
           <Button type="submit" onClick={(e)=>setIsOpen(false)}>Close</Button>

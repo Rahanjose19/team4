@@ -39,6 +39,18 @@ export function Hero() {
   const [isOpen , setIsOpen] = useState(false);
   const [reducedData, setReducedData] = useState([]);
   const [logs , setLogs] = useState([]);
+  const [open, setOpen] = useState(false);
+const [selectedMessage, setSelectedMessage] = useState('');
+
+const handleClick = (message) => {
+  setSelectedMessage(message);
+  setOpen(true);
+};
+
+const handleClose = () => {
+  setOpen(false);
+};
+
   const router = useRouter();
 
   useEffect(() => {
@@ -81,16 +93,16 @@ export function Hero() {
             <Card>
               <CardContent className="flex flex-col gap-4">
                 <div>
-                  <h3 className="text-lg font-medium">Edit Course Quotas</h3>
+                  <h3 className="text-lg font-medium">Upload CEE allotments</h3>
                   <p className="text-gray-500 dark:text-gray-400">
-                    Edit the number of seats offered in each course and respective quotas.
+                    Upload the allotment for merit , management and other quotas.
                   </p>
                 </div>
                 <Button onClick={(e)=>{
                   e.preventDefault();
-                  router.push('/edit')
+                  router.push('/actions/upload-allot')
                 }}
-                variant="outline">Edit Seats</Button>
+                variant="outline">Upload</Button>
               </CardContent>
             </Card>
             <Card>
@@ -138,9 +150,12 @@ export function Hero() {
                     e.preventDefault();
                     router.push('/courseinfo')
                   }}>Courses</Button>
+                  <Button className="size-30 bg-slate-500" onClick={(e)=>{
+                  e.preventDefault();
+                  router.push('/edit')
+                }}>Quotas</Button>
                   <Button className="size-30 bg-slate-500">Applicants</Button>
                   <Button className="size-30 bg-slate-500">Allotments</Button>
-                  <Button className="size-30 bg-slate-500">Previous Years</Button>
               </div>
               <div className="space-y-2">
                 <Input id="log" placeholder="log item" type="text" />
@@ -183,19 +198,56 @@ export function Hero() {
               </TableHeader>
               <TableBody>
                 { logs.map((log, index) => (
-                <TableRow>
+                <TableRow key={index} onClick={() => handleClick(log.message)}>
                   <TableCell>{log.action ? log.action : "Allotment"}</TableCell>
                   <TableCell>{(new Date(log.createdAt)).toLocaleString()}</TableCell>
-                  <TableCell>{log.message}</TableCell>
+                  <TableCell>{log.message.split(',')[0]}</TableCell>
 
                 </TableRow>
                 ))  
               }
-              </TableBody>
+{   open && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="relative w-full max-w-md rounded-lg bg-white p-6 dark:bg-gray-900">
+        <button
+          aria-label="Close"
+          className="absolute top-4 right-4 rounded-full p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+          onClick={handleClose}
+        >
+          <XIcon className="h-4 w-4" />
+        </button>
+        <div className="space-y-4 text-center">
+        {selectedMessage.split(',').map((line, index) => (
+          <p key={index} className="text-gray-500 dark:text-gray-400">{line}</p>
+        ))}
+      </div>
+      </div>
+    </div>
+}     
+         </TableBody>
             </Table>
           </CardContent>
         </Card>
       </div>
     </main>)
   );
+}
+
+function XIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  )
 }

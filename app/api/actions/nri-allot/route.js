@@ -16,6 +16,7 @@ async function getNriQuotas() {
 async function allotApplicants() {
   const nriQuotas = await getNriQuotas();
   let res = [];
+  let logs=[];
   const applicants = await prisma.applicant.findMany({
     orderBy: {
       percentage: "desc",
@@ -24,7 +25,7 @@ async function allotApplicants() {
       ApplicantChoice: {
         orderBy: {
           priority: "asc",
-          },
+        },
         include: {
           quota: true,
         },
@@ -54,6 +55,7 @@ async function allotApplicants() {
             },
             data: {
               currentPriority: choice.priority,
+              alloted: true,
             },
           });
 
@@ -67,6 +69,7 @@ async function allotApplicants() {
               applicant: true,
             },
           });
+          logs.push(allotment.applicant.name +"(" +allotment.applicantId + ")"+ " alloted to " + allotment.course_id)
           res.push(allotment);
           break;
         }
@@ -76,7 +79,7 @@ async function allotApplicants() {
   if (res.length) {
     await prisma.log.create({
       data: {
-        message: "Alloted " + res.length + " NRI applicants",
+        message: "Alloted " + res.length + " NRI applicants , " + logs.join(","),
       },
     });
   }

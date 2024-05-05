@@ -24,6 +24,7 @@ export function Uploadcsv() {
 
       const data = await response.json();
       console.log(data);
+      alert("Allotted Successfully");
       // Handle response data here
     } catch (error) {
       console.error('Error:', error);

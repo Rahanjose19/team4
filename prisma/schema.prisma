@@ -73,6 +73,7 @@ model Allotment {
   applicantId String
   applicant   Applicant @relation(fields: [applicantId], references: [id])
   course_id   String
+  @@unique([applicantId])
 }
 
 model Log {

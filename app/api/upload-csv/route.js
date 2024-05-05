@@ -62,7 +62,7 @@ const replaceNRIAllotment = async (courseId, repeat = false, memo = []) => {
               currentPriority: choice.priority,
             },
           });
-          const delAllotment = await prisma.allotment.deleteMany({
+          const delAllotment = await prisma.allotment.delete({
             where: {
               applicantId: applicant.id,
             },
@@ -73,6 +73,10 @@ const replaceNRIAllotment = async (courseId, repeat = false, memo = []) => {
               quotaId: quota.id,
               applicantId: applicant.id,
               course_id: quota.courseId,
+            },
+            include: {
+              applicant: true,
+              quota: true,
             },
           });
 
@@ -90,11 +94,14 @@ const replaceNRIAllotment = async (courseId, repeat = false, memo = []) => {
 };
 
 const removeNRIallotment = async (id) => {
-  const allotment = await prisma.allotment.deleteMany({
+  const allotment = await prisma.allotment.delete({
     where: {
       applicantId: id,
     },
   });
+  if (!allotment) {
+    return [];
+  }
   const replaced = await replaceNRIAllotment(allotment.course_id, true);
   return replaced;
 };
@@ -102,6 +109,7 @@ const removeNRIallotment = async (id) => {
 export const POST = async (req) => {
   const allotments = await req.json();
   console.log("step 1", allotments);
+  let logs = [];
   const res = allotments.map(async (allotment) => {
     const existingUser = await prisma.applicant.findUnique({
       where: {
@@ -111,25 +119,42 @@ export const POST = async (req) => {
 
     console.log("step 1 a ", allotment.applicantId, existingUser);
     if (existingUser) {
-      console.log("step 2", "existingUser found");
+      console.log("step 2", "existingUser found", allotment.quotaId);
       if (existingUser.isNRI) {
-        const replaced = removeNRIallotment(allotment.applicantId);
-        const allotment = await prisma.allotment.create({
+        const replaced = await removeNRIallotment(allotment.applicantId);
+        const allotmentNew = await prisma.allotment.create({
           data: {
-            quota: {
-              connect: {
-                id: allotment.quotaId,
-              },
-            },
-            applicant: {
-              connect: {
-                id: allotment.applicantId,
-              },
-            },
+            quotaId: allotment.quotaId,
+            applicantId: allotment.applicantId,
             course_id: allotment.courseId,
           },
+          include: {
+            quota: true,
+            applicant: true,
+          },
         });
-        return { nriReplaced: "true", replaced, allotment };
+        console.log("step 3", allotmentNew.quota);
+        logs.push(
+          allotmentNew.applicant.name +
+            "(" +
+            allotmentNew.applicantId +
+            ")" +
+            " alloted to " +
+            allotmentNew.course_id +
+            "from NRI to " +
+            allotmentNew.quota.name
+        );
+        for (const al of replaced) {
+          logs.push(
+            al.applicant.name +
+              "(" +
+              al.applicantId +
+              ")" +
+              " moved to " +
+              al.course_id
+          );
+        }
+        return { nriReplaced: "true", replaced, allotmentNew };
       }
 
       const previousAllotment = await prisma.allotment.findFirst({
@@ -147,6 +172,15 @@ export const POST = async (req) => {
           course_id: allotment.courseId,
         },
       });
+
+      logs.push(
+        allotment.name +
+          "(" +
+          allotment.applicantId +
+          ")" +
+          " alloted to " +
+          allotment.courseId
+      );
       return { nriReplaced: "false", previousAllotment, updated };
     }
 
@@ -185,8 +219,19 @@ export const POST = async (req) => {
 
       include: {
         applicant: true,
+        quota: true,
       },
     });
+    logs.push(
+      newAllotment.applicant.name +
+        "(" +
+        newAllotment.applicantId +
+        ")" +
+        " alloted to " +
+        newAllotment.course_id +
+        "from " +
+        newAllotment.quota.name
+    );
     return { nriReplaced: null, newAllotment };
   });
 
@@ -211,24 +256,26 @@ export const POST = async (req) => {
     data: {
       message: `Allotments updated: ${
         nriReplaced + nriDisplaced + quotaChanged + newApplicants
-      }`,
+      } , ${logs.join(",")}`,
     },
   });
-  await prisma.log.create({
+  if (nriReplaced)await prisma.log.create({
     data: {
       message: `NRI Replaced: ${nriReplaced}`,
     },
   });
-  await prisma.log.create({
+  if(nriDisplaced)await prisma.log.create({
     data: {
       message: `NRI Displaced: ${nriDisplaced}`,
     },
   });
+  if(quotaChanged)
   await prisma.log.create({
     data: {
       message: `Quota Changed: ${quotaChanged}`,
     },
   });
+  if(newApplicants)
   await prisma.log.create({
     data: {
       message: `New Applicants: ${newApplicants}`,

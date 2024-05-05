@@ -172,8 +172,8 @@ export function NRI() {
       <Input value={form.percentage} onChange={handleInputChange} id="percentage" placeholder="Enter percentage" required type="number" />
     </div>
     <div className="space-y-2">
-      <Label htmlFor="major">Major</Label>
-      <Input value={form.major} onChange={handleInputChange} id="major" placeholder="Enter major" required />
+      <Label htmlFor="major">Board</Label>
+      <Input value={form.major} onChange={handleInputChange} id="major" placeholder="Board of study" required />
     </div>
   </div>
 </div>
