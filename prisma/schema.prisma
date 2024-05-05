@@ -50,6 +50,7 @@ model Applicant {
   allotments      Allotment[]
   ApplicantChoice ApplicantChoice[]
   currentPriority Int?
+  alloted        Boolean?
 }
 
 model ApplicantChoice {
@@ -72,4 +73,11 @@ model Allotment {
   applicantId String
   applicant   Applicant @relation(fields: [applicantId], references: [id])
   course_id   String
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  action   String
+  message   String
+  createdAt DateTime @default(now())
 }
